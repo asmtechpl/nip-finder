@@ -179,6 +179,18 @@ class Nip_Finder {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'nip_finder_enqueue_gus_script');
+        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'nip_finder_enqueue_postalcode_script');
+
+        $this->loader->add_action('wp_ajax_nip_finder_fetch_gus_data', $plugin_public, 'nip_finder_fetch_gus_data');
+        $this->loader->add_action('wp_ajax_nopriv_nip_finder_fetch_gus_data', $plugin_public, 'nip_finder_fetch_gus_data');
+        $this->loader->add_action('woocommerce_checkout_update_order_meta', $plugin_public, 'nip_finder_save_nip_billing_field');
+        $this->loader->add_action('woocommerce_admin_order_data_after_billing_address', $plugin_public, 'nip_finder_display_nip_in_admin_order_meta');
+        $this->loader->add_action('woocommerce_checkout_process', $plugin_public, 'nip_finder_validate_nip_billing_field');
+        $this->loader->add_action('wp_ajax_nip_finder_fetch_cities', $plugin_public, 'nip_finder_fetch_cities_by_postcode');
+        $this->loader->add_action('wp_ajax_nopriv_nip_finder_fetch_cities', $plugin_public, 'nip_finder_fetch_cities_by_postcode');
+
+        $this->loader->add_filter('woocommerce_checkout_fields', $plugin_public, 'nip_finder_add_nip_billing_field');
 
 	}
 

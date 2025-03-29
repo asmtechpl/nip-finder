@@ -5,9 +5,9 @@ namespace NipFinder\domain;
 class ResponseDto
 {
     /**
-     * @var object
+     * @var object|array
      */
-    private object $content;
+    private $content;
 
     /**
      * @var int
@@ -15,10 +15,10 @@ class ResponseDto
     private int $statusCode;
 
     /**
-     * @param object $content
+     * @param object|array $content
      * @param int $statusCode
      */
-    public function __construct(object $content, int $statusCode){
+    public function __construct($content, int $statusCode){
         $this->content = $content;
         $this->statusCode = $statusCode;
     }
@@ -26,7 +26,7 @@ class ResponseDto
     /**
      * @return object
      */
-    public function getContent(): object
+    public function getContent()
     {
         return $this->content;
     }

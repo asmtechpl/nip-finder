@@ -68,11 +68,11 @@ class ApiClient
 
     /**
      * @param $endpoint
-     * @return object
+     * @return object|array
      * @throws GuzzleException
      * @throws ResponseException
      */
-    public function getData($endpoint): object
+    public function getData($endpoint)
     {
         $rawData = $this->getRawData($endpoint);
 

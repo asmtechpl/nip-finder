@@ -213,7 +213,7 @@ class Nip_Finder_Admin
             ),
             array(
                 'title'    => __( 'Licencja', 'nip-finder' ),
-                'id'       => 'nip_finder_test_api',
+                'id'       => 'nip_finder_manage_licence_api',
                 'type'     => 'custom',
                 'desc'     => __( 'Kliknij przycisk, aby zarządzać licencją.', 'nip-finder' ),
                 'default'  => '',
