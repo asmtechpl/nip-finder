@@ -1,0 +1,15 @@
+<?php
+/**
+ * @var $field
+ *
+ */
+?>
+<tr valign="top">
+    <th scope="row"><?php echo esc_html($field['title']); ?></th>
+    <td>
+        <button type="button" id="btn-nip-finder-manage-licence" data-url="<?=\NipFinder\enums\ApiData::API_LICENCE_URL. '/licence-information'?>" class="button">Zarządzaj lecencją</button>
+        <?php if (!empty($field['desc'])) : ?>
+            <p class="description"><?php echo esc_html($field['desc']); ?></p>
+        <?php endif; ?>
+    </td>
+</tr>

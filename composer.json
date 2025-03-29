@@ -1,0 +1,21 @@
+{
+  "name": "code-press/nip-finder",
+  "description": "A WordPress plugin that automatically retrieves company details from GUS using the VAT ID (NIP) during checkout, streamlining the ordering process for businesses.",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "CodePress",
+      "email": "kontakt@code-press.pl"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "^7.0",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "NipFinder\\": "src/"
+    }
+  }
+}

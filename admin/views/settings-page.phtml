@@ -1,0 +1,14 @@
+<div class="wrap woocommerce">
+    <?php
+    $settings = $this->get_nip_finder_settings();
+    if ( function_exists( 'woocommerce_admin_fields' ) ) {
+        foreach ( $settings as $field ) {
+            if ( 'custom' === $field['type'] && ! empty( $field['callback'] ) ) {
+                call_user_func( $field['callback'], $field );
+            } else {
+                woocommerce_admin_fields( array( $field ) );
+            }
+        }
+    }
+    ?>
+</div>

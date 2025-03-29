@@ -1,32 +1,50 @@
-(function( $ ) {
-	'use strict';
+jQuery(document).ready(function ($) {
+	const nip_field = $('#billing_nip_field');
 
-	/**
-	 * All of the code for your public-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
+	if (nip_field.length) {
+		nip_field.append('<a href="#" id="fetch-gus-data" class="button-link">Pobierz dane z GUS</a>');
+	}
 
-})( jQuery );
+	$('#fetch-gus-data').on('click', function (e) {
+		e.preventDefault();
+
+		let nip = $('#billing_nip').val();
+
+		if (!nip || !/^\d{10}$/.test(nip)) {
+			alert('Proszę wprowadzić poprawny NIP (10 cyfr).');
+			return;
+		}
+
+		$.ajax({
+			url: gpc_gus_ajax.ajax_url,
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				action: 'gpc_fetch_gus_data',
+				nip: nip,
+				nonce: gpc_gus_ajax.nonce,
+			},
+			beforeSend: function () {
+				$('#fetch-gus-data').text('Pobieranie...');
+			},
+			success: function (response) {
+				$('#fetch-gus-data').text('Pobierz dane z GUS');
+				if (response.success) {
+					$('#billing_first_name').val(response.data.first_name);
+					$('#billing_last_name').val(response.data.last_name);
+					$('#billing_company').val(response.data.company);
+					$('#billing_address_1').val(response.data.address);
+					$('#billing_city').val(response.data.city);
+					$('#billing_postcode').val(response.data.postcode);
+				} else {
+					alert(response.data.message || 'Nie udało się pobrać danych.');
+				}
+			},
+			error: function () {
+				$('#fetch-gus-data').text('Pobierz dane z GUS');
+				alert('Wystąpił błąd podczas pobierania danych.');
+			}
+		});
+	});
+});
+

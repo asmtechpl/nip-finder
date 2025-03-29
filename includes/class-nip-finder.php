@@ -140,7 +140,6 @@ class Nip_Finder {
 		$plugin_i18n = new Nip_Finder_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**
@@ -156,8 +155,16 @@ class Nip_Finder {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+        $this->loader->add_action('woocommerce_settings_tabs_array', $plugin_admin, 'add_admin_menu');
+        $this->loader->add_action('woocommerce_settings_tabs_nip_finder', $plugin_admin, 'register_settings_page');
+        $this->loader->add_action('woocommerce_update_options_nip_finder', $plugin_admin, 'update_nip_finder_settings');
+        $this->loader->add_action('woocommerce_settings_save_nip_finder', $plugin_admin, 'wc_settings_tab_save');
+        $this->loader->add_action('admin_init', $plugin_admin, 'nip_finder_maybe_update_token');
 
-	}
+        $this->loader->add_action('wp_ajax_nip_finder_check_status', $plugin_admin, 'check_status');
+        $this->loader->add_action('wp_ajax_nip_finder_register', $plugin_admin, 'register');
+        $this->loader->add_action('wp_ajax_nip_finder_register_subscription', $plugin_admin, 'register_subscription');
+    }
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality

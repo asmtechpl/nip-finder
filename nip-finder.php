@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Nip  Finder
  * Plugin URI:        https://nip-finder.pl
- * Description:       
+ * Description:
 Wtyczka automatycznie pobiera dane firmowe z GUS po numerze NIP podczas zakupu, przyspieszając proces składania zamówień dla firm.
  * Version:           1.0.0
  * Author:            CodePress
@@ -24,12 +24,18 @@ Wtyczka automatycznie pobiera dane firmowe z GUS po numerze NIP podczas zakupu, 
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       nip-finder
  * Domain Path:       /languages
+ * Requires Plugins: woocommerce
  */
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
+
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
+
 
 /**
  * Currently plugin version.
