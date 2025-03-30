@@ -89,12 +89,12 @@ function run_nip_finder() {
 
 }
 
-$myUpdateChecker = PucFactory::buildUpdateChecker(
+$updateChecker = PucFactory::buildUpdateChecker(
     'https://github.com/asmtechpl/nip-finder/',
     __FILE__,
     'nip-finder'
 );
-
-$myUpdateChecker->getVcsApi()->enableReleaseAssets();
+$updateChecker->setBranch('main');
+$updateChecker->getVcsApi()->enableReleaseAssets();
 
 run_nip_finder();
