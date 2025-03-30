@@ -282,4 +282,8 @@ class Nip_Finder_Public {
             wp_send_json_error(array('message' => 'Wystąpił błąd: ' . $e->getMessage()));
         }
     }
+
+    public function nip_finder_load_textdomain() {
+        load_plugin_textdomain( 'nip-finder', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+    }
 }
