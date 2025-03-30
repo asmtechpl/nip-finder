@@ -16,7 +16,7 @@
  * Plugin Name:       Nip Finder
  * Plugin URI:        https://nip-finder.pl
  * Description:       Wtyczka automatycznie pobiera dane firmowe z GUS po numerze NIP podczas zakupu, przyspieszając proces składania zamówień dla firm.
- * Version:           1.3.3
+ * Version:           1.3.4
  * Author:            CodePress
  * Author URI:        https://code-press.pl/
  * License:           GPL-2.0+
