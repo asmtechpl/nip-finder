@@ -94,7 +94,7 @@ $updateChecker = PucFactory::buildUpdateChecker(
     __FILE__,
     'nip-finder'
 );
-//$updateChecker->setBranch('main');
+
 $updateChecker->getVcsApi()->enableReleaseAssets();
 
 run_nip_finder();
