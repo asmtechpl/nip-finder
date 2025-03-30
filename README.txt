@@ -1,10 +1,10 @@
-=== Plugin Name ===
+=== NIP FINDER ===
 Contributors: asmtechpl
 Donate link: https://code-press.pl/
 Tags: comments, spam
 Requires at least: 3.0.1
-Tested up to: 1.0.0
-Stable tag: 4.3
+Tested up to: 6.7.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 

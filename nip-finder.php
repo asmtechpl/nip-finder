@@ -25,8 +25,6 @@
  * Domain Path:       /languages
  * Requires Plugins: woocommerce
  */
-require 'lib/plugin-update-checker.php';
-use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -87,13 +85,5 @@ function run_nip_finder() {
 	$plugin->run();
 
 }
-
-$updateChecker = PucFactory::buildUpdateChecker(
-    'https://github.com/asmtechpl/nip-finder/',
-    __FILE__,
-    'nip-finder'
-);
-
-$updateChecker->getVcsApi()->enableReleaseAssets();
 
 run_nip_finder();
