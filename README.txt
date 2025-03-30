@@ -1,86 +1,92 @@
 === Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
+Contributors: asmtechpl
 Donate link: https://code-press.pl/
 Tags: comments, spam
 Requires at least: 3.0.1
-Tested up to: 3.4
+Tested up to: 1.0.0
 Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Wtyczka automatycznie pobiera dane firmowe z GUS po numerze NIP podczas zakupu, przyspieszając proces składania zamówień dla firm.
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+# Opis Wtyczki
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+**Wtyczka Automatycznego Pobierania Danych Firmowych z GUS**
 
-A few notes about the sections above:
+W dzisiejszym szybkim tempie zakupów online, szczególnie w sektorze B2B, kluczowe jest skrócenie czasu realizacji zamówienia oraz minimalizacja ryzyka błędów przy wprowadzaniu danych. Nasza wtyczka została stworzona z myślą o firmach, które chcą usprawnić proces składania zamówień, automatyzując pobieranie niezbędnych informacji z Głównego Urzędu Statystycznego (GUS) na podstawie numeru NIP.
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
+## Jak to działa?
 
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
+Podczas procesu składania zamówienia w Twoim sklepie internetowym, klient będący przedstawicielem firmy wpisuje numer NIP. Wtyczka automatycznie łączy się z bazą danych GUS, pobierając szczegółowe dane firmowe, takie jak:
 
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+- **Nazwa firmy**
+- **Adres siedziby**
+- **Status podatkowy**
+- **Numer REGON**
+- **I inne istotne informacje**
+
+Dzięki temu dane te zostają uzupełnione w formularzu zakupowym bez konieczności ręcznego wprowadzania przez klienta. Efektem jest przyspieszenie procesu realizacji zamówień, zmniejszenie liczby błędów oraz poprawa doświadczenia użytkownika.
+
+## Korzyści dla Twojego sklepu
+
+- **Oszczędność czasu:** Automatyczne pobieranie danych firmowych eliminuje potrzebę ręcznego wpisywania informacji, co znacząco skraca czas finalizacji zamówienia.
+- **Dokładność danych:** Integracja z bazą GUS zapewnia, że pobrane informacje są aktualne i precyzyjne, co zmniejsza ryzyko błędów i pomyłek.
+- **Lepsze doświadczenie klienta:** Uproszczony proces zamawiania sprawia, że zakupy stają się bardziej intuicyjne i przyjazne, co może prowadzić do wzrostu satysfakcji i lojalności klientów.
+- **Wsparcie dla firm:** Wtyczka jest idealnym rozwiązaniem dla firm, które często dokonują zakupów hurtowych lub mają rozbudowane systemy zakupowe, umożliwiając im szybkie i bezproblemowe składanie zamówień.
+
+## Integracja i Kompatybilność
+
+Wtyczka została zaprojektowana tak, aby bezproblemowo integrować się z popularnymi platformami e-commerce, takimi jak WooCommerce, Magento czy PrestaShop. Jej elastyczna architektura umożliwia łatwe dostosowanie do specyficznych potrzeb Twojego sklepu. Wtyczka jest również kompatybilna z najnowszymi wersjami PHP oraz systemami operacyjnymi, co zapewnia stabilne działanie w różnych środowiskach.
+
+## Łatwa Konfiguracja i Personalizacja
+
+## Bezpieczeństwo i Wsparcie
+
+Bezpieczeństwo danych jest dla nas priorytetem. Wtyczka korzysta z bezpiecznych połączeń (SSL/TLS) podczas przesyłania danych między Twoim sklepem a bazą GUS. Regularne aktualizacje gwarantują ochronę przed potencjalnymi zagrożeniami oraz kompatybilność z najnowszymi standardami bezpieczeństwa.
+
+W przypadku pytań lub problemów, nasz zespół wsparcia technicznego jest gotowy do pomocy. Oferujemy również rozbudowaną dokumentację, która krok po kroku przeprowadzi Cię przez proces instalacji, konfiguracji oraz optymalizacji działania wtyczki.
+
+## Podsumowanie
+
+Wtyczka automatycznie pobiera dane firmowe z GUS na podstawie numeru NIP, co pozwala na błyskawiczne uzupełnienie formularzy zamówień i usprawnienie procesu zakupowego. Dzięki intuicyjnej konfiguracji, elastyczności oraz wysokiemu poziomowi bezpieczeństwa, stanowi idealne narzędzie dla firm pragnących zwiększyć efektywność swoich procesów zakupowych i zminimalizować ryzyko błędów.
+
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
+II
 
-e.g.
+Instalacja oraz konfiguracja wtyczki jest prosta i intuicyjna:
 
-1. Upload `nip-finder.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+1. **Instalacja:** Wystarczy pobrać wtyczkę z repozytorium, zainstalować ją w systemie CMS oraz aktywować.
+2. **Konfiguracja:** W panelu administracyjnym znajdziesz dedykowaną sekcję, w której możesz ustawić parametry połączenia z bazą GUS, klucze API oraz inne opcje personalizacji.
+3. **Personalizacja Formularza:** Dzięki elastycznemu kreatorowi formularzy możesz dostosować układ pól na stronie zamówienia, tak aby odpowiadały indywidualnym potrzebom Twojego biznesu.
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= Czy wtyczka obsługuje numery NIP zagranicznych firm? =
+Nie, wtyczka jest przeznaczona do pobierania danych z polskiej bazy GUS i obsługuje wyłącznie numery NIP polskich przedsiębiorstw.
 
-An answer to that question.
+= Jak często aktualizowane są dane w bazie GUS? =
+GUS aktualizuje swoje dane regularnie, jednak częstotliwość aktualizacji może różnić się w zależności od rodzaju informacji. Wtyczka pobiera dane w czasie rzeczywistym, więc zawsze otrzymujesz najświeższe dostępne informacje.
 
-= What about foo bar? =
+= Czy mogę ręcznie edytować dane pobrane z GUS? =
+Tak, po automatycznym pobraniu danych z GUS masz możliwość ich ręcznej edycji przed finalizacją zamówienia.
 
-Answer to foo bar dilemma.
+= Czy wtyczka jest płatna? =
+Podstawowa wersja wtyczki jest dostępna za darmo. Istnieje jednak możliwość zakupu wersji premium z dodatkowymi funkcjonalnościami. Szczegóły znajdziesz na stronie wtyczki.
+
+= Jak skontaktować się z pomocą techniczną w przypadku problemów? =
+W przypadku pytań lub problemów związanych z działaniem wtyczki, prosimy o kontakt poprzez formularz wsparcia dostępny na naszej stronie internetowej lub bezpośrednio z poziomu panelu administracyjnego WordPressa w sekcji ustawień wtyczki.
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+
 
 == Changelog ==
 
-= 1.0 =
-* A change since the previous version.
-* Another change.
-
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
-
-== Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
 
 == Arbitrary section ==
 
@@ -89,26 +95,3 @@ plugins where more information needs to be conveyed that doesn't fit into the ca
 "installation."  Arbitrary sections will be shown below the built-in sections outlined above.
 
 == A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
