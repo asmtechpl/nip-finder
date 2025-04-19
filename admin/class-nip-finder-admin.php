@@ -178,7 +178,7 @@ class Nip_Finder_Admin
                 'title'   => __( 'Klucz API', 'nip-finder' ),
                 'id'      => 'nip_finder_api_key',
                 'type'    => 'text',
-                'desc'    => __( $this->generate_description_text_for_api_key(), 'nip-finder' ),
+                'desc'    => $this->generate_description_text_for_api_key(),
                 'default' => '',
             ),
             array(
@@ -227,12 +227,14 @@ class Nip_Finder_Admin
     }
 
     public function nip_finder_maybe_update_token() {
-        if ( isset( $_GET['page'] ) && 'wc-settings' === $_GET['page'] &&
-            isset( $_GET['tab'] ) && 'nip_finder' === $_GET['tab'] &&
-            isset( $_GET['token'] ) && ! empty( $_GET['token'] ) ) {
-
-            $token = sanitize_text_field( $_GET['token'] );
-            update_option( 'nip_finder_api_key', $token );
+        if (
+            isset($_GET['page']) && 'wc-settings' === $_GET['page'] &&
+            isset($_GET['tab'])  && 'nip_finder' === $_GET['tab'] &&
+            isset($_GET['token']) && ! empty($_GET['token']) &&
+            isset($_GET['_wpnonce']) && check_admin_referer('nip_finder_update_token', '_wpnonce')
+        ) {
+            $token = sanitize_text_field($_GET['token']);
+            update_option('nip_finder_api_key', $token);
         }
     }
 
@@ -303,7 +305,7 @@ class Nip_Finder_Admin
 
             $data = $apiClient->postData(ApiEndpoints::GENERATE_REGISTER_KEY_ENDPOINT, [
                 'email' => get_option('admin_email'),
-                'remoteAddress' => $_SERVER['REMOTE_ADDR'],
+                'remoteAddress' => filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP ),
                 'pageUrl' => get_option('siteurl')
             ]);
 
@@ -339,12 +341,11 @@ class Nip_Finder_Admin
     /**
      * @return string
      */
-    private function generate_description_text_for_api_key()
-    {
+    private function generate_description_text_for_api_key() {
         if ($this->api_key != null && $this->api_key != '') {
-            return 'Wprowadź swój klucz API.';
+            return __( 'Wprowadź swój klucz API.', 'nip-finder' );
         }
 
-        return 'Wprowadź swój klucz API. <a href="#" id="nip-finder-generate-api-key">Wygeneruj go</a>';
+        return __( 'Wprowadź swój klucz API. <a href="#" id="nip-finder-generate-api-key">Wygeneruj go</a>', 'nip-finder' );
     }
 }

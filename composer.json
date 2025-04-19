@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "guzzlehttp/guzzle": "^7.0",
+    "guzzlehttp/guzzle": "^7.9.3",
     "ext-json": "*"
   },
   "autoload": {

@@ -2,8 +2,8 @@
 Contributors: asmtechpl
 Donate link: https://code-press.pl/
 Tags: comments, spam
-Requires at least: 3.0.1
-Tested up to: 6.7.2
+Requires at least: 6.2
+Tested up to: 6.7
 Stable tag: 1.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -80,3 +80,13 @@ plugins where more information needs to be conveyed that doesn't fit into the ca
 "installation."  Arbitrary sections will be shown below the built-in sections outlined above.
 
 == A brief Markdown Example ==
+
+== Usługi zewnętrzne ==
+
+Ta wtyczka łączy się z zewnętrznym API, aby pobierać dane firmowe z GUS na podstawie numeru NIP podanego przez użytkownika podczas składania zamówienia.
+
+- **Opis usługi:** Wtyczka automatycznie pobiera aktualne dane firmowe, takie jak nazwa firmy, adres siedziby, status podatkowy, numer REGON oraz inne istotne informacje, dzięki integracji z serwisem GUS.
+- **Przesyłane dane:** Podczas procesu składania zamówienia wysyłany jest numer NIP użytkownika do API dostępnego pod adresem `https://api.gapc.pl`. W przypadku braku zgody lub dostępności danych, stosowany jest wcześniej zdefiniowany numer domyślny.
+- **Warunki korzystania:** Korzystając z tej wtyczki, akceptujesz przesyłanie wskazanych danych do serwisu zewnętrznego. Aby zapoznać się z regulaminami usługi, odwiedź [Regulamin usługi](https://nip-finder.pl/regulamin/) oraz [Politykę prywatności](https://nip-finder.pl/polityka-prywatnosci/).
+*Uwaga:* Informacja o korzystaniu z usług zewnętrznych została podana, aby zapewnić pełną przejrzystość procesu oraz zgodność z obowiązującymi przepisami o ochronie danych osobowych.
+
