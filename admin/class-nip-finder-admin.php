@@ -186,7 +186,7 @@ class Nip_Finder_Admin
                 'id'      => 'nip_finder_getting_nip',
                 'type'    => 'select',
                 'desc'    => __( 'Pobieranie danych przy finalizacji zamówienia na podstawie NIP.', 'nip-finder' ),
-                'default' => '1',
+                'default' => '0',
                 'options' => array(
                     '1' => __( 'Tak', 'nip-finder' ),
                     '0' => __( 'Nie', 'nip-finder' ),
@@ -197,7 +197,7 @@ class Nip_Finder_Admin
                 'id'      => 'nip_finder_getting_postal_codes',
                 'type'    => 'select',
                 'desc'    => __( 'Pobieranie danych przy finalizacji zamówienia na podstawie kodów pocztowych', 'nip-finder' ),
-                'default' => '1',
+                'default' => '0',
                 'options' => array(
                     '1' => __( 'Tak', 'nip-finder' ),
                     '0' => __( 'Nie', 'nip-finder' ),
