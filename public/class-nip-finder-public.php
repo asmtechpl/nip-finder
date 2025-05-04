@@ -128,65 +128,83 @@ class Nip_Finder_Public {
     }
 
     /**
-     * Pobiera dane z GUS na podstawie numeru NIP.
+     * Pobiera dane z GUS przez AJAX na podstawie numeru NIP.
      *
      * @return void
      */
     public function nip_finder_fetch_gus_data(): void {
         check_ajax_referer( 'nip_finder_gus_nonce', 'nonce' );
 
-        if ( ! isset( $_POST['nip'] ) ) {
-            wp_send_json_error( array( 'message' => __( 'Brak numeru NIP.', 'nip-finder' ) ) );
+        $raw_nip = isset( $_POST['nip'] ) ? wp_unslash( $_POST['nip'] ) : '';
+        if ( '' === $raw_nip ) {
+            wp_send_json_error( [ 'message' => __( 'Brak numeru NIP.', 'nip-finder' ) ] );
         }
 
-        $raw_nip = $_POST['nip'];
         if ( ! preg_match( '/^\d{10}$/', $raw_nip ) ) {
-            wp_send_json_error( array( 'message' => __( 'Nieprawidłowy format NIP. NIP musi składać się z 10 cyfr.', 'nip-finder' ) ) );
+            wp_send_json_error( [ 'message' => __( 'Nieprawidłowy format NIP. NIP musi składać się z 10 cyfr.', 'nip-finder' ) ] );
         }
 
         $nip = sanitize_text_field( $raw_nip );
 
         try {
             $apiClient = new ApiClient( ApiData::API_URL, $this->api_key );
-            $data = $apiClient->getData( '/api/v1/gus?nip=' . $nip );
+            $data      = $apiClient->getData( '/api/v1/gus?nip=' . urlencode( $nip ) );
 
             if ( $data && isset( $data->name ) ) {
-                wp_send_json_success( array(
-                    'first_name' => isset( $data->first_name ) ? sanitize_text_field( $data->first_name ) : '',
-                    'last_name'  => isset( $data->last_name )  ? sanitize_text_field( $data->last_name )  : '',
+                wp_send_json_success( [
+                    'first_name' => ! empty( $data->first_name )
+                        ? sanitize_text_field( $data->first_name ) : '',
+                    'last_name'  => ! empty( $data->last_name )
+                        ? sanitize_text_field( $data->last_name )  : '',
                     'company'    => sanitize_text_field( $data->name ),
-                    'address'    => sanitize_text_field( $data->street ) . ' ' . sanitize_text_field( $data->houseNumber ?? '' ),
-                    'city'       => isset( $data->city ) ? sanitize_text_field( $data->city ) : '',
-                    'postcode'   => isset( $data->postalCode ) ? sanitize_text_field( $data->postalCode ) : '',
-                ) );
-            } else {
-                wp_send_json_error( array( 'message' => __( 'Nie znaleziono danych dla podanego NIP.', 'nip-finder' ) ) );
+                    'address'    => sanitize_text_field( $data->street )
+                        . ' ' . sanitize_text_field( $data->houseNumber ?? '' ),
+                    'city'       => ! empty( $data->city )
+                        ? sanitize_text_field( $data->city ) : '',
+                    'postcode'   => ! empty( $data->postalCode )
+                        ? sanitize_text_field( $data->postalCode ) : '',
+                ] );
             }
+
+            wp_send_json_error( [ 'message' => __( 'Nie znaleziono danych dla podanego NIP.', 'nip-finder' ) ] );
         } catch ( Exception | GuzzleException $e ) {
-            wp_send_json_error( array(
-                'message' => __( 'Wystąpił błąd: ', 'nip-finder' ) . esc_html( $e->getMessage() )
-            ) );
+            wp_send_json_error( [
+                'message' => __( 'Wystąpił błąd: ', 'nip-finder' ) . esc_html( $e->getMessage() ),
+            ] );
         }
     }
 
+
     /**
-     * Add update data
+     * Zapisuje pole NIP do zamówienia.
      *
-     * @param $order_id
+     * @param int $order_id
      * @return void
      */
-    public function nip_finder_save_nip_billing_field($order_id) {
-        if (!empty($_POST['billing_nip'])) {
-            if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'nip_finder_save_billing_field')) {
-                return;
-            }
-
-            if (!current_user_can('edit_post', $order_id)) {
-                return;
-            }
-
-            update_post_meta($order_id, '_billing_nip', sanitize_text_field($_POST['billing_nip']));
+    public function nip_finder_save_nip_billing_field( $order_id ): void {
+        if ( empty( $_POST['billing_nip'] ) ) {
+            return;
         }
+
+        if (
+            ! isset( $_POST['_wpnonce'] )
+            || ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ), 'nip_finder_save_billing_field' )
+        ) {
+            return;
+        }
+        if ( ! current_user_can( 'edit_post', $order_id ) ) {
+            return;
+        }
+
+        $raw_nip = wp_unslash( $_POST['billing_nip'] );
+        $nip     = sanitize_text_field( $raw_nip );
+
+        if ( ! preg_match( '/^\d{10}$/', $nip ) ) {
+            return;
+        }
+
+        // 4) Zapis meta
+        update_post_meta( $order_id, '_billing_nip', $nip );
     }
 
 
@@ -209,7 +227,21 @@ class Nip_Finder_Public {
      * @return void
      */
     public function nip_finder_validate_nip_billing_field() {
-        $billing_nip = isset( $_POST['billing_nip'] ) ? sanitize_text_field( $_POST['billing_nip'] ) : '';
+        if ( ! isset( $_POST['nip_finder_nonce'] )
+            || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nip_finder_nonce'] ) ), 'nip_finder_action' )
+        ) {
+            wc_add_notice( __( 'Błąd bezpieczeństwa – spróbuj odświeżyć stronę i wysłać formularz ponownie.', 'nip-finder' ), 'error' );
+            return;
+        }
+
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wc_add_notice( __( 'Nie masz uprawnień do wykonania tej akcji.', 'nip-finder' ), 'error' );
+            return;
+        }
+
+        $billing_nip = isset( $_POST['billing_nip'] )
+            ? sanitize_text_field( wp_unslash( $_POST['billing_nip'] ) )
+            : '';
 
         if ( empty( $billing_nip ) ) {
             wc_add_notice( __( 'Pole NIP (Szczegóły płatności) jest wymagane.', 'nip-finder' ), 'error' );
@@ -260,7 +292,7 @@ class Nip_Finder_Public {
     }
 
     /**
-     * Pobiera miejscowości na podstawie kodu pocztowego.
+     * Fetch cities via AJAX based on a postal code.
      *
      * @return void
      * @throws GuzzleException
@@ -268,39 +300,38 @@ class Nip_Finder_Public {
     public function nip_finder_fetch_cities_by_postcode(): void {
         check_ajax_referer( 'nip_finder_postcode_nonce', 'nonce' );
 
-        if ( ! isset( $_POST['postcode'] ) || (
-                ! preg_match( '/^\d{2}-\d{3}$/', $_POST['postcode'] ) &&
-                ! preg_match( '/^\d{5}$/', $_POST['postcode'] )
-            ) ) {
-            wp_send_json_error( array( 'message' => __( 'Nieprawidłowy kod pocztowy.', 'nip-finder' ) ) );
+        $raw_postcode    = isset( $_POST['postcode'] ) ? wp_unslash( $_POST['postcode'] ) : '';
+        $raw_countryCode = isset( $_POST['countryCode'] ) ? wp_unslash( $_POST['countryCode'] ) : '';
+
+        if (
+            ! preg_match( '/^\d{2}-\d{3}$/', $raw_postcode ) &&
+            ! preg_match( '/^\d{5}$/',   $raw_postcode )
+        ) {
+            wp_send_json_error( [
+                'message' => __( 'Nieprawidłowy kod pocztowy.', 'nip-finder' ),
+            ] );
         }
 
-        $postcode    = sanitize_text_field( $_POST['postcode'] );
-        $countryCode = isset( $_POST['countryCode'] ) ? sanitize_text_field( $_POST['countryCode'] ) : '';
+        $postcode    = sanitize_text_field( $raw_postcode );      // usuwa tagi, nadmiarowe białe znaki itp. :contentReference[oaicite:0]{index=0}
+        $countryCode = sanitize_text_field( $raw_countryCode );   // odpowiednia do prostego stringa :contentReference[oaicite:1]{index=1}
 
         try {
             $apiClient = new ApiClient( ApiData::API_URL, $this->api_key );
-            $data      = $apiClient->getData( '/api/v1/postal-code?postalCode=' . $postcode . '&countryCode=' . $countryCode );
+            $data      = $apiClient->getData( '/api/v1/postal-code?postalCode=' . urlencode( $postcode ) . '&countryCode=' . urlencode( $countryCode ) );
 
-            if ( $data && is_array( $data ) ) {
-                $cities = array_unique( array_column( $data, 'city' ) );
+            if ( is_array( $data ) && ! empty( $data ) ) {
+                $cities = array_unique( wp_list_pluck( $data, 'city' ) );
+                // 5) Wyjście JSON – WP automatycznie escape’uje key/value
                 wp_send_json_success( $cities );
-            } else {
-                wp_send_json_error( array( 'message' => __( 'Nie znaleziono miejscowości dla podanego kodu pocztowego.', 'nip-finder' ) ) );
             }
-        } catch ( Exception $e ) {
-            wp_send_json_error( array(
-                'message' => __( 'Wystąpił błąd: ', 'nip-finder' ) . esc_html( $e->getMessage() )
-            ) );
-        }
-    }
 
-    /**
-     * Ładuje plik językowy wtyczki.
-     *
-     * @return void
-     */
-    public function nip_finder_load_textdomain() {
-        load_plugin_textdomain( 'nip-finder', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+            wp_send_json_error( [
+                'message' => __( 'Nie znaleziono miejscowości dla podanego kodu pocztowego.', 'nip-finder' ),
+            ] );
+        } catch ( Exception $e ) {
+            wp_send_json_error( [
+                'message' => __( 'Wystąpił błąd: ', 'nip-finder' ) . esc_html( $e->getMessage() ),  // escape late przy wyświetlaniu błędu :contentReference[oaicite:2]{index=2}
+            ] );
+        }
     }
 }
