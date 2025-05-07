@@ -242,9 +242,7 @@ class Nip_Finder_Public {
             ? sanitize_text_field( wp_unslash( $_POST['billing_nip'] ) )
             : '';
 
-        if ( empty( $billing_nip ) ) {
-            wc_add_notice( __( 'Pole NIP (Szczegóły płatności) jest wymagane.', 'nip-finder' ), 'error' );
-        } elseif ( ! preg_match( '/^\d{10}$/', $billing_nip ) ) {
+        if ( ! preg_match( '/^\d{10}$/', $billing_nip ) ) {
             wc_add_notice( __( 'NIP musi składać się z 10 cyfr.', 'nip-finder' ), 'error' );
         }
     }
