@@ -265,6 +265,11 @@ class Nip_Finder_Public {
             'priority'    => 25,
         );
 
+        $fields['billing']['nip_finder_nonce'] = array(
+            'type'    => 'hidden',
+            'default' => wp_create_nonce( 'nip_finder_action' ),
+        );
+
         return $fields;
     }
 
