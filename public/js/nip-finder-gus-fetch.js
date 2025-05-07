@@ -30,8 +30,6 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 $('#fetch-gus-data').text('Pobierz dane z GUS');
                 if (response.success) {
-                    $('#billing_first_name').val(response.data.first_name);
-                    $('#billing_last_name').val(response.data.last_name);
                     $('#billing_company').val(response.data.company);
                     $('#billing_address_1').val(response.data.address);
                     $('#billing_city').val(response.data.city);
