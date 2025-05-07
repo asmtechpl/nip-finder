@@ -203,7 +203,6 @@ class Nip_Finder_Public {
             return;
         }
 
-        // 4) Zapis meta
         update_post_meta( $order_id, '_billing_nip', $nip );
     }
 
@@ -261,7 +260,7 @@ class Nip_Finder_Public {
             'type'        => 'text',
             'label'       => __( 'NIP', 'nip-finder' ),
             'placeholder' => __( 'Wprowadź NIP', 'nip-finder' ),
-            'required'    => true,
+            'required'    => false,
             'class'       => array( 'form-row-wide' ),
             'priority'    => 25,
         );
@@ -312,8 +311,8 @@ class Nip_Finder_Public {
             ] );
         }
 
-        $postcode    = sanitize_text_field( $raw_postcode );      // usuwa tagi, nadmiarowe białe znaki itp. :contentReference[oaicite:0]{index=0}
-        $countryCode = sanitize_text_field( $raw_countryCode );   // odpowiednia do prostego stringa :contentReference[oaicite:1]{index=1}
+        $postcode    = sanitize_text_field( $raw_postcode );
+        $countryCode = sanitize_text_field( $raw_countryCode );
 
         try {
             $apiClient = new ApiClient( ApiData::API_URL, $this->api_key );
