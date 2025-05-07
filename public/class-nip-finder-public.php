@@ -238,12 +238,12 @@ class Nip_Finder_Public {
             return;
         }
 
-        $billing_nip = isset( $_POST['billing_nip'] )
-            ? sanitize_text_field( wp_unslash( $_POST['billing_nip'] ) )
-            : '';
+        if (isset($_POST['billing_nip']) && $_POST['billing_nip'] != null) {
+            $billing_nip = sanitize_text_field( wp_unslash( $_POST['billing_nip'] ));
 
-        if ( ! preg_match( '/^\d{10}$/', $billing_nip ) ) {
-            wc_add_notice( __( 'NIP musi składać się z 10 cyfr.', 'nip-finder' ), 'error' );
+            if ( ! preg_match( '/^\d{10}$/', $billing_nip ) ) {
+                wc_add_notice( __( 'NIP musi składać się z 10 cyfr.', 'nip-finder' ), 'error' );
+            }
         }
     }
 
