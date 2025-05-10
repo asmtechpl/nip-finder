@@ -135,16 +135,15 @@ class Nip_Finder_Public {
     public function nip_finder_fetch_gus_data(): void {
         check_ajax_referer( 'nip_finder_gus_nonce', 'nonce' );
 
-        $raw_nip = isset( $_POST['nip'] ) ? wp_unslash( $_POST['nip'] ) : '';
-        if ( '' === $raw_nip ) {
+        $nip = isset( $_POST['nip'] ) ? sanitize_text_field( wp_unslash( $_POST['nip'] ) ) : '';
+
+        if ( empty( $nip ) ) {
             wp_send_json_error( [ 'message' => __( 'Brak numeru NIP.', 'nip-finder' ) ] );
         }
 
-        if ( ! preg_match( '/^\d{10}$/', $raw_nip ) ) {
+        if ( ! preg_match( '/^\d{10}$/', $nip ) ) {
             wp_send_json_error( [ 'message' => __( 'Nieprawidłowy format NIP. NIP musi składać się z 10 cyfr.', 'nip-finder' ) ] );
         }
-
-        $nip = sanitize_text_field( $raw_nip );
 
         try {
             $apiClient = new ApiClient( ApiData::API_URL, $this->api_key );
@@ -152,17 +151,12 @@ class Nip_Finder_Public {
 
             if ( $data && isset( $data->name ) ) {
                 wp_send_json_success( [
-                    'first_name' => ! empty( $data->first_name )
-                        ? sanitize_text_field( $data->first_name ) : '',
-                    'last_name'  => ! empty( $data->last_name )
-                        ? sanitize_text_field( $data->last_name )  : '',
+                    'first_name' => ! empty( $data->first_name ) ? sanitize_text_field( $data->first_name ) : '',
+                    'last_name'  => ! empty( $data->last_name ) ? sanitize_text_field( $data->last_name ) : '',
                     'company'    => sanitize_text_field( $data->name ),
-                    'address'    => sanitize_text_field( $data->street )
-                        . ' ' . sanitize_text_field( $data->houseNumber ?? '' ),
-                    'city'       => ! empty( $data->city )
-                        ? sanitize_text_field( $data->city ) : '',
-                    'postcode'   => ! empty( $data->postalCode )
-                        ? sanitize_text_field( $data->postalCode ) : '',
+                    'address'    => sanitize_text_field( $data->street ) . ' ' . sanitize_text_field( $data->houseNumber ?? '' ),
+                    'city'       => ! empty( $data->city ) ? sanitize_text_field( $data->city ) : '',
+                    'postcode'   => ! empty( $data->postalCode ) ? sanitize_text_field( $data->postalCode ) : '',
                 ] );
             }
 
@@ -188,7 +182,7 @@ class Nip_Finder_Public {
 
         if (
             ! isset( $_POST['_wpnonce'] )
-            || ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ), 'nip_finder_save_billing_field' )
+            || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'nip_finder_save_billing_field' )
         ) {
             return;
         }
@@ -196,8 +190,7 @@ class Nip_Finder_Public {
             return;
         }
 
-        $raw_nip = wp_unslash( $_POST['billing_nip'] );
-        $nip     = sanitize_text_field( $raw_nip );
+        $nip = sanitize_text_field( wp_unslash( $_POST['billing_nip'] ) );
 
         if ( ! preg_match( '/^\d{10}$/', $nip ) ) {
             return;
@@ -302,20 +295,17 @@ class Nip_Finder_Public {
     public function nip_finder_fetch_cities_by_postcode(): void {
         check_ajax_referer( 'nip_finder_postcode_nonce', 'nonce' );
 
-        $raw_postcode    = isset( $_POST['postcode'] ) ? wp_unslash( $_POST['postcode'] ) : '';
-        $raw_countryCode = isset( $_POST['countryCode'] ) ? wp_unslash( $_POST['countryCode'] ) : '';
+        $postcode    = isset( $_POST['postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) : '';
+        $countryCode = isset( $_POST['countryCode'] ) ? sanitize_text_field( wp_unslash( $_POST['countryCode'] ) ) : '';
 
         if (
-            ! preg_match( '/^\d{2}-\d{3}$/', $raw_postcode ) &&
-            ! preg_match( '/^\d{5}$/',   $raw_postcode )
+            ! preg_match( '/^\d{2}-\d{3}$/', $postcode ) &&
+            ! preg_match( '/^\d{5}$/', $postcode )
         ) {
             wp_send_json_error( [
                 'message' => __( 'Nieprawidłowy kod pocztowy.', 'nip-finder' ),
             ] );
         }
-
-        $postcode    = sanitize_text_field( $raw_postcode );
-        $countryCode = sanitize_text_field( $raw_countryCode );
 
         try {
             $apiClient = new ApiClient( ApiData::API_URL, $this->api_key );
@@ -323,7 +313,6 @@ class Nip_Finder_Public {
 
             if ( is_array( $data ) && ! empty( $data ) ) {
                 $cities = array_unique( wp_list_pluck( $data, 'city' ) );
-                // 5) Wyjście JSON – WP automatycznie escape’uje key/value
                 wp_send_json_success( $cities );
             }
 
@@ -332,8 +321,9 @@ class Nip_Finder_Public {
             ] );
         } catch ( Exception $e ) {
             wp_send_json_error( [
-                'message' => __( 'Wystąpił błąd: ', 'nip-finder' ) . esc_html( $e->getMessage() ),  // escape late przy wyświetlaniu błędu :contentReference[oaicite:2]{index=2}
+                'message' => __( 'Wystąpił błąd: ', 'nip-finder' ) . esc_html( $e->getMessage() ),
             ] );
         }
     }
+
 }
